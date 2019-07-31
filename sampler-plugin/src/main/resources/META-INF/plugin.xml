@@ -1,0 +1,23 @@
+<idea-plugin>
+    <id>com.test.untitled4</id>
+    <name>Sampler</name>
+    <vendor email="peter.bogdanov@jetbrains.com" url="http://www.jetbrains.com">JetBrains</vendor>
+
+    <description><![CDATA[
+    This plugin allow to create sample projects from project wizard.<br>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <moduleBuilder builderClass="org.jetbrains.sampler.DemoModuleWizardStep" id="DEMO_STEP" order="first"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>

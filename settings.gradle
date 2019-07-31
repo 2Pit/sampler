@@ -1,0 +1,3 @@
+rootProject.name = 'sampler'
+include 'sampler-plugin', 'sampler-service', 'sampler-common'
+

@@ -1,0 +1,5 @@
+github.oauth2.token=147d2090ec01f251b04912916f14d4ce3646b5b7
+jenkins.basic.auth=000
+jenkins.run.token=000
+jenkins.port=000
+storage.url=
