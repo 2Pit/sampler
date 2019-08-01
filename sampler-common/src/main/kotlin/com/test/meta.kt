@@ -8,5 +8,9 @@ data class SampleDescription(
         val url: String,
         val readme: String,
         val tags: List<String>
-)
+) {
+    override fun toString(): String {
+        return name
+    }
+}
 
