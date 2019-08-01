@@ -14,7 +14,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <moduleBuilder builderClass="org.jetbrains.sampler.DemoModuleWizardStep" id="DEMO_STEP" order="first"/>
+        <moduleBuilder builderClass="org.jetbrains.sampler.pw.DemoModuleWizardStep" id="DEMO_STEP" order="first"/>
     </extensions>
 
     <actions>

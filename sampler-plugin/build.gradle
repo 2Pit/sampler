@@ -7,7 +7,7 @@ group 'com.test'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    runtime project(':sampler-common')
+    compile project(':sampler-common')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
