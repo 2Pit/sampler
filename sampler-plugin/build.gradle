@@ -15,6 +15,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2019.2'
+    plugins = ["git4idea"]
 }
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"

@@ -33,13 +33,14 @@ class SamplerTemplateList(items: List<SampleDescription>) {
                         GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false))
 
-        list1.addListSelectionListener { listSelectionEvent ->
+        list1.addListSelectionListener {
             val template = selectedTemplate
             if (template != null) {
                 descriptionPane.text = template.readme
                 descriptionPane.caretPosition = 0
             }
         }
+        list1.selectedIndex = 0
     }
 
     private fun createUIComponents() {}

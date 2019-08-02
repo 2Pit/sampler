@@ -14,8 +14,10 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <moduleBuilder builderClass="org.jetbrains.sampler.pw.DemoModuleWizardStep" id="DEMO_STEP" order="first"/>
+        <moduleBuilder builderClass="org.jetbrains.sampler.pw.SamplerModuleBuilder" id="DEMO_STEP" order="first"/>
     </extensions>
+
+    <depends>Git4Idea</depends>
 
     <actions>
         <!-- Add your actions here -->
