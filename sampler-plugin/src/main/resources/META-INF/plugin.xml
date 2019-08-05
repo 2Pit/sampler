@@ -20,6 +20,14 @@
     <depends>Git4Idea</depends>
 
     <actions>
-        <!-- Add your actions here -->
+        <group id="MyPlugin.SampleMenu" text="_Sample Menu" description="Sample menu">
+            <add-to-group group-id="MainMenu" anchor="last"  />
+            <action id="Myplugin.Dialogs" class="org.jetbrains.sampler.TestAction" text="Test Action" description="A test menu item" />
+        </group>
     </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <jbProtocolCommand implementation="org.jetbrains.sampler.JBProtocolSamplerCommand"/>
+    </extensions>
+
 </idea-plugin>
