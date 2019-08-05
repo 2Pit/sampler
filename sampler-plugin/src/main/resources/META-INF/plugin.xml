@@ -18,6 +18,7 @@
     </extensions>
 
     <depends>Git4Idea</depends>
+    <depends>org.jetbrains.plugins.gradle</depends>
 
     <actions>
         <group id="MyPlugin.SampleMenu" text="_Sample Menu" description="Sample menu">

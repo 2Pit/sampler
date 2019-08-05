@@ -7,10 +7,10 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
-import com.intellij.openapi.project.impl.ProjectImpl
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.util.io.FileUtil
 import git4idea.commands.Git
+import org.jetbrains.plugins.gradle.service.project.open.linkAndRefreshGradleProject
 import org.jetbrains.sampler.downloadSampleDescriptions
 import java.io.File
 
@@ -43,8 +43,7 @@ class SamplerModuleBuilder : ModuleBuilder() {
 
     override fun setupRootModel(model: ModifiableRootModel) {
         val info = settingsComponents.selectedTemplate!!
-        val project = model.project as ProjectImpl
-        project.setProjectName(info.name)
+        val project = model.project
 
 //      TODO: it would be better to run this action under progress bar
 //      TODO: import {gradle | mvn}
@@ -54,6 +53,8 @@ class SamplerModuleBuilder : ModuleBuilder() {
                 val res = Git.getInstance().clone(project, tmpDir.parentFile, info.url, tmpDir.name)
                 FileUtil.moveDirWithContent(tmpDir, File(project.basePath!!))
                 if (!res.success()) LOG.error(res.toString()) else LOG.debug(res.toString())
+
+                linkAndRefreshGradleProject(project.presentableUrl!!, project)
             }
         }.queue()
     }

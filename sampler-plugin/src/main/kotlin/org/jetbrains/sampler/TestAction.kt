@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.JBProtocolCommand
 
-class TestAction: AnAction("Test Action") {
+class TestAction : AnAction("Test Action") {
     override fun actionPerformed(e: AnActionEvent) {
         JBProtocolCommand.findCommand("sampler")!!
                 .perform(
