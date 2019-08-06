@@ -13,12 +13,9 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
-    <extensions defaultExtensionNs="com.intellij">
-        <moduleBuilder builderClass="org.jetbrains.sampler.pw.SamplerModuleBuilder" id="DEMO_STEP" order="first"/>
-    </extensions>
-
     <depends>Git4Idea</depends>
     <depends>org.jetbrains.plugins.gradle</depends>
+    <depends>org.jetbrains.kotlin</depends>
 
     <actions>
         <group id="MyPlugin.SampleMenu" text="_Sample Menu" description="Sample menu">
@@ -29,6 +26,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <jbProtocolCommand implementation="org.jetbrains.sampler.JBProtocolSamplerCommand"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <moduleBuilder implementation="org.jetbrains.sampler.pw.SamplerModuleBuilder"/>
     </extensions>
 
 </idea-plugin>
