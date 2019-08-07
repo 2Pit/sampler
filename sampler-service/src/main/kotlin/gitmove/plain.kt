@@ -3,26 +3,30 @@ package gitmove
 import java.util.*
 
 data class Reference(
-    val ref: String,
-    val `object`: RefObject
+        val ref: String,
+        val `object`: RefObject
 )
 
 data class RefObject(
-    val type: String,
-    val sha: String
+        val type: RefType,
+        val sha: String
 )
 
+enum class RefType { commit, tag }
+
 data class Blob(
-    override val sha: String,
-    val size: Int,
-    val content: String,
-    val encoding: String
+        override val sha: String,
+        val size: Int,
+        val content: BlobContentType,
+        val encoding: String
 ) : TreeI
 
+enum class BlobContentType { `utf-8`, base64 }
+
 data class Author(
-    val date: Date,
-    val name: String,
-    val email: String
+        val date: Date,
+        val name: String,
+        val email: String
 )
 
 interface TreeI {
@@ -42,10 +46,10 @@ data class Commit(
 ) : CommitI
 
 data class Verification(
-    val verified: Boolean,
-    val reason: String,
-    val signature: String,
-    val payload: String
+        val verified: Boolean,
+        val reason: String,
+        val signature: String,
+        val payload: String
 )
 
 data class Tree(
@@ -55,9 +59,9 @@ data class Tree(
 ) : TreeI
 
 data class TreeNode(
-    override val sha: String,
-    val path: String,
-    val mode: String,
-    val type: String,
-    val size: Int
+        override val sha: String,
+        val path: String,
+        val mode: String,
+        val type: String,
+        val size: Int
 ) : TreeI
