@@ -2,6 +2,7 @@ package gitmove
 
 import gitmove.GitTree.GitTreeNode.GitTreeType.blob
 import gitmove.GitTree.GitTreeNode.GitTreeType.tree
+import gitmove.services.*
 import gitmove.tree.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -24,9 +25,9 @@ fun main() {
             .client(httpClient)
             .build()
 
-    val outService = CachingSpecialService(
+    val outService = TestCachingSpecialService(SpecialService(
             retrofit.create(GitHubService::class.java),
-            Repository("2Pit", "test")
+            Repository("2Pit", "test"))
     )
 
     runBlocking {
@@ -37,13 +38,13 @@ fun main() {
     outService.save()
 }
 
-suspend fun buildRef(gitRef: GitReference, service: SpecialService): Ref {
+suspend fun buildRef(gitRef: GitReference, service: SpecialServiceI): Ref {
     assert(gitRef.`object`.type == GitReference.GitRefObject.GitRefType.commit)
 
     return Ref(gitRef.ref, buildCommit(gitRef.`object`.sha, service))
 }
 
-suspend fun buildCommit(commitSha: String, service: SpecialService): Commit = coroutineScope {
+suspend fun buildCommit(commitSha: String, service: SpecialServiceI): Commit = coroutineScope {
     val gitCmt = service.getCommit(commitSha)
     Commit(
             gitCmt.message,
@@ -52,13 +53,13 @@ suspend fun buildCommit(commitSha: String, service: SpecialService): Commit = co
     )
 }
 
-suspend fun buildNodeFromCommit(gitCommit: GitCommit, service: SpecialService): Node = coroutineScope {
+suspend fun buildNodeFromCommit(gitCommit: GitCommit, service: SpecialServiceI): Node = coroutineScope {
     val gitTree = service.getTree(gitCommit.tree.sha)
     val children = gitTree.tree.map { async { it.path to buildNode(it, service) } }.awaitAll().toMap()
     Tree("", children)
 }
 
-suspend fun buildNode(gitTreeNode: GitTree.GitTreeNode, service: SpecialService): Node = coroutineScope {
+suspend fun buildNode(gitTreeNode: GitTree.GitTreeNode, service: SpecialServiceI): Node = coroutineScope {
     when (gitTreeNode.type) {
         blob -> Blob(gitTreeNode.path)//, gitTreeNode.sha)
         tree -> {

@@ -4,10 +4,12 @@ import kotlinx.serialization.*
 import kotlinx.serialization.internal.StringDescriptor
 import java.util.*
 
+@Serializable
 data class GitReference(
         val ref: String,
         val `object`: GitRefObject
 ) {
+    @Serializable
     data class GitRefObject(
             val type: GitRefType,
             val sha: String
