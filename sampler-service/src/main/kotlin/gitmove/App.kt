@@ -1,6 +1,9 @@
 package gitmove
 
-import kotlinx.coroutines.runBlocking
+import gitmove.GitTree.GitTreeNode.GitTreeType.blob
+import gitmove.GitTree.GitTreeNode.GitTreeType.tree
+import gitmove.tree.*
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,14 +24,47 @@ fun main() {
             .client(httpClient)
             .build()
 
-    val outService = SpecialService(
+    val outService = CachingSpecialService(
             retrofit.create(GitHubService::class.java),
             Repository("2Pit", "test")
     )
 
-    val ans: List<Reference> = runBlocking {
-        outService.getAllRefs()
+    runBlocking {
+        val ref = buildRef(outService.getAllRefs().first(), outService)
+        println(ref)
     }
-//    val ans = outService.getAllRefs()
-    ans.forEach { println(it) }
+
+    outService.save()
+}
+
+suspend fun buildRef(gitRef: GitReference, service: SpecialService): Ref {
+    assert(gitRef.`object`.type == GitReference.GitRefObject.GitRefType.commit)
+
+    return Ref(gitRef.ref, buildCommit(gitRef.`object`.sha, service))
+}
+
+suspend fun buildCommit(commitSha: String, service: SpecialService): Commit = coroutineScope {
+    val gitCmt = service.getCommit(commitSha)
+    Commit(
+            gitCmt.message,
+            buildNodeFromCommit(gitCmt, service),
+            gitCmt.parents.map { async { buildCommit(it.sha, service) } }.awaitAll()
+    )
+}
+
+suspend fun buildNodeFromCommit(gitCommit: GitCommit, service: SpecialService): Node = coroutineScope {
+    val gitTree = service.getTree(gitCommit.tree.sha)
+    val children = gitTree.tree.map { async { it.path to buildNode(it, service) } }.awaitAll().toMap()
+    Tree("", children)
+}
+
+suspend fun buildNode(gitTreeNode: GitTree.GitTreeNode, service: SpecialService): Node = coroutineScope {
+    when (gitTreeNode.type) {
+        blob -> Blob(gitTreeNode.path)//, gitTreeNode.sha)
+        tree -> {
+            val gitTree = service.getTree(gitTreeNode.sha)
+            val children = gitTree.tree.map { async { it.path to buildNode(it, service) } }.awaitAll().toMap()
+            Tree(gitTreeNode.path, children)
+        }
+    }
 }

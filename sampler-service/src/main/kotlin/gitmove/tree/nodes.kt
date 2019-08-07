@@ -1,21 +1,10 @@
 package gitmove.tree
 
-class Ref(
-    val name: String,
-    val commit: Commit
-)
+class Ref(val name: String, val commit: Commit)
+class Commit(val message: String, val node: Node, val parent: List<Commit>)
 
-class Commit(val name: String, val node: Node, val parent: Commit? = null)
-
-sealed class Node(
-    val name: String
-)
-
-class Tree(
-    name: String,
-    val children: Map<String, Node>
-) : Node(name)
-
+sealed class Node(val name: String)
+class Tree(name: String, val children: Map<String, Node>) : Node(name)
 class Blob(name: String) : Node(name)
 
 fun main() {
@@ -23,7 +12,8 @@ fun main() {
             "master",
             Commit(
                     "init",
-                    Blob("readme.md")
+                    Blob("readme.md"),
+                    emptyList()
             )
     )
 }

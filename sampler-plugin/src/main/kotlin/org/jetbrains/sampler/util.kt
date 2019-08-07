@@ -1,6 +1,7 @@
 package org.jetbrains.sampler
 
 import com.test.SampleDescription
+import com.test.Settings
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.list

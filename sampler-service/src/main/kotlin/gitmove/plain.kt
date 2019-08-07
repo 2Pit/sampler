@@ -1,67 +1,90 @@
 package gitmove
 
+import kotlinx.serialization.*
+import kotlinx.serialization.internal.StringDescriptor
 import java.util.*
 
-data class Reference(
+data class GitReference(
         val ref: String,
-        val `object`: RefObject
-)
+        val `object`: GitRefObject
+) {
+    data class GitRefObject(
+            val type: GitRefType,
+            val sha: String
+    ) {
+        enum class GitRefType { commit, tag }
+    }
+}
 
-data class RefObject(
-        val type: RefType,
-        val sha: String
-)
-
-enum class RefType { commit, tag }
-
-data class Blob(
-        override val sha: String,
+@Serializable
+data class GitBlob(
+        val sha: String,
         val size: Int,
-        val content: BlobContentType,
+        val content: GitBlobContentType,
         val encoding: String
-) : TreeI
+) {
+    enum class GitBlobContentType { `utf-8`, base64 }
+}
 
-enum class BlobContentType { `utf-8`, base64 }
-
-data class Author(
+@Serializable
+data class GitAuthor(
+        @Serializable(with = DateSerializer::class)
         val date: Date,
         val name: String,
         val email: String
 )
 
-interface TreeI {
-    val sha: String
+@Serializable
+data class GitCommit(
+//        override val sha: String,
+        val sha: String,
+        val author: GitAuthor,
+        val committer: GitAuthor,
+        val message: String,
+        val tree: GitTreeI,
+//        val verification: Verification,
+        val parents: List<GitTreeI>
+) {
+    @Serializable
+    data class GitTreeI(val sha: String)
+
+    @Serializable
+    data class GitVerification(
+            val verified: Boolean,
+            val reason: String,
+            val signature: String,
+            val payload: String
+    )
 }
 
-interface CommitI : TreeI
-
-data class Commit(
-        override val sha: String,
-        val author: Author,
-        val committer: Author,
-        val message: String,
-        val tree: TreeI,
-        val parents: List<CommitI>,
-        val verification: Verification
-) : CommitI
-
-data class Verification(
-        val verified: Boolean,
-        val reason: String,
-        val signature: String,
-        val payload: String
-)
-
-data class Tree(
-        override val sha: String,
-        val tree: List<TreeNode>,
+@Serializable
+data class GitTree(
+        val sha: String,
+        val tree: List<GitTreeNode>,
         val truncated: Boolean
-) : TreeI
+) {
+    @Serializable
+    data class GitTreeNode(
+            val sha: String,
+            val path: String,
+            val mode: String,
+            val type: GitTreeType,
+            val size: Int
+    ) {
+        enum class GitTreeType { blob, tree }
+    }
+}
 
-data class TreeNode(
-        override val sha: String,
-        val path: String,
-        val mode: String,
-        val type: String,
-        val size: Int
-) : TreeI
+@Serializer(forClass = DateSerializer::class)
+object DateSerializer : KSerializer<Date> {
+    override val descriptor: SerialDescriptor =
+            StringDescriptor.withName("DateSerializer")
+
+    override fun serialize(encoder: Encoder, obj: Date) {
+        encoder.encodeString(obj.time.toString())
+    }
+
+    override fun deserialize(decoder: Decoder): Date {
+        return Date(decoder.decodeString().toLong())
+    }
+}

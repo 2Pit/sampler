@@ -1,4 +1,4 @@
-package org.jetbrains.sampler
+package com.test
 
 import java.io.File
 
