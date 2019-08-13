@@ -2,6 +2,7 @@ package gitmove.services
 
 import com.test.Settings
 import gitmove.GitReference
+import retrofit2.Response
 import java.io.File
 
 class TestCachingSpecialService(service: SpecialService) : CachingSpecialService(service) {
@@ -14,12 +15,13 @@ class TestCachingSpecialService(service: SpecialService) : CachingSpecialService
         super.save()
     }
 
-    override suspend fun getRef(ref: String): GitReference = refCache.map.getOrPut(ref) { service.getRef(ref) }
+    override suspend fun getRef(ref: String): Response<GitReference> =
+            Response.success(refCache.map.getOrPut(ref) { service.getRef(ref).body()!! })
 
-    override suspend fun getAllRefs(): List<GitReference> {
+    override suspend fun getAllRefs(): Response<List<GitReference>> {
         val values = refCache.map.values.toList()
-        val res = if (values.isNotEmpty()) values else service.getAllRefs()
+        val res = if (values.isNotEmpty()) values else service.getAllRefs().body()!!
         res.associateByTo(refCache.map) { it.ref }
-        return res
+        return Response.success(res)
     }
 }

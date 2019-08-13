@@ -30,10 +30,12 @@ fun main() {
             Repository("2Pit", "test"))
     )
 
-    runBlocking {
-        val ref = buildRef(outService.getAllRefs().first(), outService)
-        println(ref)
+    val ref = runBlocking {
+        buildRef(outService.getAllRefs().body()!!.first(), outService)
     }
+
+    val root = ref.commit.node as Tree
+    val a = extractPath(root, "a", "b/c")
 
     outService.save()
 }
@@ -45,7 +47,7 @@ suspend fun buildRef(gitRef: GitReference, service: SpecialServiceI): Ref {
 }
 
 suspend fun buildCommit(commitSha: String, service: SpecialServiceI): Commit = coroutineScope {
-    val gitCmt = service.getCommit(commitSha)
+    val gitCmt = service.getCommit(commitSha).body()!!
     Commit(
             gitCmt.message,
             buildNodeFromCommit(gitCmt, service),
@@ -54,16 +56,16 @@ suspend fun buildCommit(commitSha: String, service: SpecialServiceI): Commit = c
 }
 
 suspend fun buildNodeFromCommit(gitCommit: GitCommit, service: SpecialServiceI): Node = coroutineScope {
-    val gitTree = service.getTree(gitCommit.tree.sha)
+    val gitTree = service.getTree(gitCommit.tree.sha).body()!!
     val children = gitTree.tree.map { async { it.path to buildNode(it, service) } }.awaitAll().toMap()
-    Tree("", children)
+    Tree("ROOT", children)
 }
 
 suspend fun buildNode(gitTreeNode: GitTree.GitTreeNode, service: SpecialServiceI): Node = coroutineScope {
     when (gitTreeNode.type) {
         blob -> Blob(gitTreeNode.path)//, gitTreeNode.sha)
         tree -> {
-            val gitTree = service.getTree(gitTreeNode.sha)
+            val gitTree = service.getTree(gitTreeNode.sha).body()!!
             val children = gitTree.tree.map { async { it.path to buildNode(it, service) } }.awaitAll().toMap()
             Tree(gitTreeNode.path, children)
         }

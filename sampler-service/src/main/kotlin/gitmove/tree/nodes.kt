@@ -26,8 +26,8 @@ fun extractPath(tree: Tree, dir: String, other: String?): Node? {
             if (other == null) {
                 node
             } else {
-                val (_dir, _other) = other.split("/", limit = 2)
-                extractPath(node, _dir, _other)
+                val split = other.split("/", limit = 2)
+                extractPath(node, split.first(), if (split.size == 1) null else split[1])
             }
         }
         is Blob -> if (other == null) node else null

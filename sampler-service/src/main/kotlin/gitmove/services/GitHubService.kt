@@ -1,6 +1,7 @@
 package gitmove.services
 
 import gitmove.*
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -19,13 +20,13 @@ interface GitHubService {
             @Path("owner") owner: String,
             @Path("repo") repo: String,
             @Path("ref") ref: String
-    ): GitReference
+    ): Response<GitReference>
 
     @GET("/repos/{owner}/{repo}/git/refs")
     suspend fun getAllRefs(
             @Path("owner") owner: String,
             @Path("repo") repo: String
-    ): List<GitReference>
+    ): Response<List<GitReference>>
 
     @POST("/repos/{owner}/{repo}/git/refs")
     suspend fun createRef(
@@ -33,14 +34,14 @@ interface GitHubService {
             @Path("repo") repo: String,
             @Query("ref") ref: String,
             @Query("sha") sha: String
-    ): GitReference
+    ): Response<GitReference>
 
     @GET("/repos/{owner}/{repo}/git/commits/{commit_sha}")
     suspend fun getCommit(
             @Path("owner") owner: String,
             @Path("repo") repo: String,
             @Path("commit_sha") commitSha: String
-    ): GitCommit
+    ): Response<GitCommit>
 
     @POST("/repos/{owner}/{repo}/git/commits")
     suspend fun createCommit(
@@ -52,21 +53,21 @@ interface GitHubService {
             @Query("author") author: GitAuthor?,
             @Query("committer") committer: GitAuthor?,
             @Query("signature") signature: String?
-    ): GitCommit
+    ): Response<GitCommit>
 
     @GET("/repos/{owner}/{repo}/git/trees/{tree_sha}")
     suspend fun getTree(
             @Path("owner") owner: String,
             @Path("repo") repo: String,
             @Path("tree_sha") treeSha: String
-    ): GitTree
+    ): Response<GitTree>
 
     @GET("/repos/{owner}/{repo}/git/trees/{tree_sha}?recursive=1")
     suspend fun getTreeRecursive(
             @Path("owner") owner: String,
             @Path("repo") repo: String,
             @Path("tree_sha") treeSha: String
-    ): GitTree
+    ): Response<GitTree>
 
     @POST("/repos/{owner}/{repo}/git/trees")
     suspend fun createTree(
@@ -74,14 +75,14 @@ interface GitHubService {
             @Path("repo") repo: String,
             @Query("tree") tree: GitTree,
             @Query("base_tree") baseTree: String?
-    ): GitTree.GitTreeNode
+    ): Response<GitTree.GitTreeNode>
 
     @GET("/repos/{owner}/{repo}/git/blobs/{file_sha}")
     suspend fun getBlob(
             @Path("owner") owner: String,
             @Path("repo") repo: String,
             @Path("file_sha") fileSha: String
-    ): GitBlob
+    ): Response<GitBlob>
 
     @POST("/repos/{owner}/{repo}/git/blobs")
     suspend fun createBlob(
@@ -89,5 +90,5 @@ interface GitHubService {
             @Path("repo") repo: String,
             @Query("content") content: String,
             @Query("encoding") encoding: GitBlob.GitBlobContentType = GitBlob.GitBlobContentType.`utf-8`
-    )
+    ): Response<GitCommit.GitTreeI>
 }

@@ -9,6 +9,7 @@ import kotlinx.serialization.internal.StringSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.map
+import retrofit2.Response
 import java.io.File
 
 open class CachingSpecialService(protected val service: SpecialService) : SpecialServiceI by service {
@@ -44,7 +45,12 @@ open class CachingSpecialService(protected val service: SpecialService) : Specia
         blobCache.save()
     }
 
-    override suspend fun getTree(treeSha: String): GitTree = treeCache.map.getOrPut(treeSha) { service.getTree(treeSha) }
-    override suspend fun getCommit(commitSha: String): GitCommit = commitCache.map.getOrPut(commitSha) { service.getCommit(commitSha) }
-    override suspend fun getBlob(fileSha: String): GitBlob = blobCache.map.getOrPut(fileSha) { service.getBlob(fileSha) }
+    override suspend fun getTree(treeSha: String): Response<GitTree> =
+            Response.success(treeCache.map.getOrPut(treeSha) { service.getTree(treeSha).body()!! })
+
+    override suspend fun getCommit(commitSha: String): Response<GitCommit> =
+            Response.success(commitCache.map.getOrPut(commitSha) { service.getCommit(commitSha).body()!! })
+
+    override suspend fun getBlob(fileSha: String): Response<GitBlob> =
+            Response.success(blobCache.map.getOrPut(fileSha) { service.getBlob(fileSha).body()!! })
 }
