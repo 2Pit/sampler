@@ -1,11 +1,7 @@
 import app.Services
-import app.states.CheckIn
-import gitmove.services.CardContentType
-import gitmove.services.ProjectService
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import okio.Buffer
 
 fun main() {
     val json = Json(JsonConfiguration(strictMode = false, prettyPrint = true))
@@ -21,15 +17,18 @@ fun main() {
 //            println(json.stringify(GColumn.serializer(), it))
 //        }
 
-        val res = Services.projectService.createCard(CheckIn.columnId, ProjectService.CreateRequest(issueId, CardContentType.Issue.name))
-        if (!res.isSuccessful) {
-            res.errorBody()
-            val buffer = Buffer()
-            println(res.errorBody()?.string())
-        }
+//        val res = Services.projectService.createCard(CheckIn.columnId, ProjectService.CreateRequest(issueId, CardContentType.Issue.name))
+//        if (!res.isSuccessful) {
+//            res.errorBody()
+//            val buffer = Buffer()
+//            println(res.errorBody()?.string())
+//        }
 //        println(res.isSuccessful)
 //        println(res.errorBody())
 //        println(res.body())
+
+        val issue = Services.issueService.getIssue({ "ksamples/main" }, 5)
+        println(issue)
 
     }
     println("end")

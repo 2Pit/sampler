@@ -37,7 +37,8 @@ fun Application.module() {
 
     routing {
         post("/add") {
-            //            val issue = json.parse(GitIssue.serializer(), call.receiveText())
+            call.respond("OK")
+
             val text = call.receiveText()
             val event = call.request.headers["x-github-event"]!!
             val timestamp = call.request.headers["timestamp"]!!
@@ -56,9 +57,6 @@ fun Application.module() {
                 else -> {
                 }
             }
-
-            call.respond("OK")
-//            Checker.checker.execute(CheckerContext(processId, issue), CheckerSubject())
         }
 
         get("/") {
@@ -68,17 +66,5 @@ fun Application.module() {
         get("/json/jackson") {
             call.respond(mapOf("hello" to "world"))
         }
-    }
-}
-
-fun handleInstallationEvent(payload: String, event: InstallationEvent) {
-    when (event.action) {
-        created ->
-//            Checker.addChecker.execute()
-            println("add")
-        deleted ->
-            println("deleted")
-        new_permissions_accepted ->
-            println("unsupported")
     }
 }
