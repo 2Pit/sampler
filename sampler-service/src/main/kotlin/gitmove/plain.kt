@@ -90,3 +90,59 @@ object DateSerializer : KSerializer<Date> {
         return Date(decoder.decodeString().toLong())
     }
 }
+
+@Serializable
+data class InstallationEvent(
+        val action: Action,
+        val installation: Installation,
+        val repositories: List<Repository>,
+        val sender: GSender
+) {
+    enum class Action { created, deleted, new_permissions_accepted }
+
+    @Serializable
+    class Installation(
+            val id: Int,
+            val account: Account,
+            val app_id: Int,
+            val target_id: Int,
+            val target_type: TargetType,
+            val created_at: Long,
+            val updated_at: Long
+    ) {
+        @Serializable
+        data class Account(
+                val login: String,
+                val id: Int,
+                val type: TargetType
+        )
+
+        enum class TargetType { Organization }
+    }
+
+    @Serializable
+    data class Repository(
+            val id: Int,
+            val name: String,
+            val full_name: String
+    )
+}
+
+@Serializable
+data class GSender(
+        val id: Int,
+        val login: String,
+        val type: Type
+) {
+    enum class Type { User }
+}
+
+@Serializable
+data class GProject(
+        val id: Int,
+        val name: String,
+        val body: String,
+        val number: Int,
+        val state: String,
+        val creator: GSender
+)
