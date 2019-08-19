@@ -1,6 +1,6 @@
-package app
+package app.services
 
-import gitmove.services.ProjectService
+import app.Properties
 import okhttp3.OkHttpClient
 import okio.Buffer
 import org.eclipse.egit.github.core.service.CommitService
@@ -27,13 +27,15 @@ object Services {
             chain.proceed(request)
         }
                 .addInterceptor { chain ->
-                    //            chain.request().body()LoggerFactory.getLogger(ProjectService::class.java)
+                    val logger = LoggerFactory.getLogger(ProjectService::class.java)
                     val r = chain.request()
                     val buffer = Buffer()
                     r.body()?.writeTo(buffer)
-                    LoggerFactory.getLogger(ProjectService::class.java).info(buffer.readUtf8())
-                    LoggerFactory.getLogger(ProjectService::class.java).info(r.url().toString())
-                    LoggerFactory.getLogger(ProjectService::class.java).info(r.headers().toString())
+
+                    logger.info(buffer.readUtf8())
+                    logger.info(r.url().toString())
+                    logger.info(r.headers().toString())
+
                     chain.proceed(r)
                 }
                 .build()

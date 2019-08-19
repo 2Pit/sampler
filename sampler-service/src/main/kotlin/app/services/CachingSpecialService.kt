@@ -1,9 +1,9 @@
-package gitmove.services
+package app.services
 
 import com.test.Settings
-import gitmove.GitBlob
-import gitmove.GitCommit
-import gitmove.GitTree
+import app.api.GitBlob
+import app.api.GitCommit
+import app.api.GitTree
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.internal.StringSerializer
 import kotlinx.serialization.json.Json

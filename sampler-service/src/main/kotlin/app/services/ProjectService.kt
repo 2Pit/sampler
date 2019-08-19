@@ -1,9 +1,10 @@
-package gitmove.services
+package app.services
 
-import gitmove.GProject
-import gitmove.GSender
+import app.api.GitCard
+import app.api.GitColumn
+import app.api.GitProject
+import app.api.GitUser
 import kotlinx.serialization.Serializable
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -11,22 +12,22 @@ import retrofit2.http.Path
 
 interface ProjectService {
     @GET("/orgs/{org}/projects")
-    suspend fun getProjects(@Path("org") org: String): Response<List<GProject>>
+    suspend fun getProjects(@Path("org") org: String): List<GitProject>
 
     @GET("/repos/{owner}/{repo}/projects")
-    suspend fun getProjects(@Path("owner") owner: String, @Path("repo") repo: String): Response<List<GProject>>
+    suspend fun getProjects(@Path("owner") owner: String, @Path("repo") repo: String): List<GitProject>
 
     @GET("/projects/{project_id}")
-    suspend fun getProject(@Path("project_id") projectId: Long): Response<GProject>
+    suspend fun getProject(@Path("project_id") projectId: Long): GitProject
 
     @GET("/projects/{project_id}/columns")
-    suspend fun getColumns(@Path("project_id") projectId: Long): Response<List<GColumn>>
+    suspend fun getColumns(@Path("project_id") projectId: Long): List<GitColumn>
 
     @GET("/projects/columns/{column_id}/cards")
-    suspend fun getCards(@Path("column_id") columnId: Long): Response<List<GCard>>
+    suspend fun getCards(@Path("column_id") columnId: Long): List<GitCard>
 
     @POST("/projects/columns/{column_id}/cards")
-    suspend fun createCard(@Path("column_id") columnId: Long): Response<GCard>
+    suspend fun createCard(@Path("column_id") columnId: Long): GitCard
 
 //    suspend fun createCard(
 //            columnId: Long,
@@ -38,20 +39,9 @@ interface ProjectService {
     suspend fun createCard(
             @Path("column_id") columnId: Long,
             @Body content: CreateRequest
-    ): Response<GCard>
+    ): GitCard
 
     class CreateRequest(val content_id: Long, val content_type: String)
 }
 
-@Serializable
-data class GColumn(val Id: Long, val name: String)
-
-data class GCard(
-        val id: Long,
-        val note: String,
-        val creator: GSender,
-        val archived: Boolean
-)
-
 enum class CardContentType { Issue, PullRequest }
-

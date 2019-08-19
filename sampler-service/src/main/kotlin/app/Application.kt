@@ -1,10 +1,12 @@
 package app
 
-import app.states.CheckIn
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
-import gitmove.InstallationEvent
-import gitmove.InstallationEvent.Action.*
+import app.api.events.InstallationEvent
+import app.api.events.InstallationEvent.Action.*
+import app.api.events.PushEvent
+import app.project.Installation
+import app.project.Push
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -41,18 +43,20 @@ fun Application.module() {
 
             val text = call.receiveText()
             val event = call.request.headers["x-github-event"]!!
-            val timestamp = call.request.headers["timestamp"]!!
-            val payload = call.request.headers["x-github-delivery"]!!
+//            val timestamp = call.request.headers["timestamp"]!!
+//            val payload = call.request.headers["x-github-delivery"]!!
             when (event) {
                 "installation" -> {
                     val installationEvent = json.parse(InstallationEvent.serializer(), text)
                     when (installationEvent.action) {
-                        created -> CheckIn.splitRepos.execute(installationEvent, Unit)
+                        created -> Installation.splitRepos.execute(installationEvent, Unit)
                         deleted -> TODO()
                         new_permissions_accepted -> TODO("UNSUPPORTED")
                     }
                 }
                 "push" -> {
+                    val pushEvent = json.parse(PushEvent.serializer(), text)
+                    Push.pipeline
                 }
                 else -> {
                 }

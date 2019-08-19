@@ -1,4 +1,4 @@
-package gitmove
+package app.api
 
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.StringDescriptor
@@ -92,44 +92,7 @@ object DateSerializer : KSerializer<Date> {
 }
 
 @Serializable
-data class InstallationEvent(
-        val action: Action,
-        val installation: Installation,
-        val repositories: List<Repository>,
-        val sender: GSender
-) {
-    enum class Action { created, deleted, new_permissions_accepted }
-
-    @Serializable
-    class Installation(
-            val id: Int,
-            val account: Account,
-            val app_id: Int,
-            val target_id: Int,
-            val target_type: TargetType,
-            val created_at: Long,
-            val updated_at: Long
-    ) {
-        @Serializable
-        data class Account(
-                val login: String,
-                val id: Int,
-                val type: TargetType
-        )
-
-        enum class TargetType { Organization }
-    }
-
-    @Serializable
-    data class Repository(
-            val id: Int,
-            val name: String,
-            val full_name: String
-    )
-}
-
-@Serializable
-data class GSender(
+data class GitUser(
         val id: Int,
         val login: String,
         val type: Type
@@ -138,11 +101,37 @@ data class GSender(
 }
 
 @Serializable
-data class GProject(
+data class GitProject(
         val id: Int,
         val name: String,
         val body: String,
         val number: Int,
         val state: String,
-        val creator: GSender
+        val creator: GitUser
 )
+
+@Serializable
+data class GitRepository(
+        val id: Int,
+        val name: String,
+        val full_name: String,
+        val owner: GitUser
+)
+
+
+@Serializable
+data class GitPusher(val name: String, val email: String)
+
+@Serializable
+data class GitColumn(val Id: Long, val name: String)
+
+@Serializable
+data class GitCard(
+        val id: Long,
+        val note: String,
+        val creator: GitUser,
+        val archived: Boolean,
+        val content_url: String
+) {
+    val issueNumber = content_url.substringAfterLast("/").toInt()
+}

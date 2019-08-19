@@ -98,5 +98,30 @@ timestamp: 1565785161636
 
 ###
 
+GET https://api.github.com/projects/columns/6215563/cards
+Accept: application/vnd.github.inertia-preview+json
+Authorization: token 147d2090ec01f251b04912916f14d4ce3646b5b7
+
+###
+
+GET https://api.github.com/projects/columns/cards/25238393
+Accept: application/vnd.github.inertia-preview+json
+Authorization: token 147d2090ec01f251b04912916f14d4ce3646b5b7
+
+###
+
+GET https://api.github.com/projects/columns/cards/25238393
+Accept: application/vnd.github.inertia-preview+json
+Accept: application/vnd.github.v3+json
+Authorization: token 147d2090ec01f251b04912916f14d4ce3646b5b7
+
+###
+
+GET https://api.github.com/repos/ksamples/main/issues
+Authorization: token 147d2090ec01f251b04912916f14d4ce3646b5b7
+Accept: application/vnd.github.v3+json
+
+###
+
 
 

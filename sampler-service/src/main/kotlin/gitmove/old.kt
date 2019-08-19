@@ -1,9 +1,9 @@
 package gitmove
 
-import gitmove.services.GitHubService
-import gitmove.services.Repository
-import gitmove.services.SpecialService
-import gitmove.services.TestCachingSpecialService
+import app.services.GitHubService
+import app.services.Repository
+import app.services.SpecialService
+import app.services.TestCachingSpecialService
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

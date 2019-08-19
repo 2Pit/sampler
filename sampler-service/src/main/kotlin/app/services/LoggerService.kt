@@ -1,9 +1,9 @@
-package gitmove.services
+package app.services
 
-import gitmove.GitBlob
-import gitmove.GitCommit
-import gitmove.GitReference
-import gitmove.GitTree
+import app.api.GitBlob
+import app.api.GitCommit
+import app.api.GitReference
+import app.api.GitTree
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import retrofit2.Response

@@ -1,6 +1,6 @@
-package gitmove.services
+package app.services
 
-import gitmove.*
+import app.api.*
 import retrofit2.Response
 
 open class SpecialService(

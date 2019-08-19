@@ -1,7 +1,7 @@
-package gitmove.services
+package app.services
 
 import com.test.Settings
-import gitmove.GitReference
+import app.api.GitReference
 import retrofit2.Response
 import java.io.File
 

@@ -1,4 +1,5 @@
-import app.Services
+import app.project.Consts
+import app.services.Services
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -27,8 +28,12 @@ fun main() {
 //        println(res.errorBody())
 //        println(res.body())
 
-        val issue = Services.issueService.getIssue({ "ksamples/main" }, 5)
-        println(issue)
+        val res = projectService.getCards(Consts.checkInColumnId)
+        res.forEach { println(it) }
+
+
+//        val issue = Services.issueService.getIssue({ "ksamples/main" }, 5)
+//        println(issue)
 
     }
     println("end")
