@@ -1,3 +1,5 @@
+package app.test
+
 import app.project.Consts
 import app.services.Services
 import kotlinx.coroutines.runBlocking

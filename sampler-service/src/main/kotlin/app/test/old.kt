@@ -1,4 +1,4 @@
-package gitmove
+package app.test
 
 import app.services.GitHubService
 import app.services.Repository

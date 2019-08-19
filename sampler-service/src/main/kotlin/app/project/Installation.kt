@@ -1,7 +1,6 @@
 package app.project
 
 import app.api.events.InstallationEvent
-import app.model.Card
 import app.model.CardManager
 import app.model.Process
 import app.model.ProcessManager
@@ -15,7 +14,7 @@ import org.eclipse.egit.github.core.Issue
 import org.slf4j.LoggerFactory
 
 object Installation {
-    val log = LoggerFactory.getLogger(Installation::class.java)
+    private val log = LoggerFactory.getLogger(Installation::class.java)
     //    TODO get id from github code
     const val CHECK_IN_COLUMN_ID = 6215563L
     const val ORGANIZATION = "ksamples"

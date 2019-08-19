@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>com.test.untitled4</id>
+    <id>org.jetbrains.sampler</id>
     <name>Sampler</name>
     <vendor email="peter.bogdanov@jetbrains.com" url="http://www.jetbrains.com">JetBrains</vendor>
 

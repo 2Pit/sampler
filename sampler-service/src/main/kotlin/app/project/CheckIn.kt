@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 
 object CheckIn {
-    val log = LoggerFactory.getLogger(CheckIn::class.java)
+    private val log = LoggerFactory.getLogger(CheckIn::class.java)
     const val organization = "ksamples"
 
     private val runCard = PipelinePhase("runCard")
