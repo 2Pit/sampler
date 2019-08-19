@@ -1,9 +1,9 @@
 ktor {
     deployment {
         port = 8090
-        port = ${?PORT}
     }
     application {
         modules = [app.ApplicationKt.module]
     }
+    security.github.token = "1234567890"
 }

@@ -19,16 +19,20 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+@KtorExperimentalAPI
 @UnstableDefault
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
     val json = Json(JsonConfiguration(strictMode = false))
+    Properties.githubToken = this.environment.config.property("ktor.security.github.token").getString()
+    Properties.init()
 
     install(ContentNegotiation) {
         jackson {
