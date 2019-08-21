@@ -24,20 +24,18 @@ object Services {
                     .addHeader("Authorization", "token ${Properties.githubToken}")
                     .build()
             chain.proceed(request)
-        }
-                .addInterceptor { chain ->
-                    val logger = LoggerFactory.getLogger(ProjectService::class.java)
-                    val r = chain.request()
-                    val buffer = Buffer()
-                    r.body()?.writeTo(buffer)
+        }.addInterceptor { chain ->
+            val logger = LoggerFactory.getLogger(ProjectService::class.java)
+            val request = chain.request()
+            val buffer = Buffer()
+            request.body()?.writeTo(buffer)
 
-                    logger.info(buffer.readUtf8())
-                    logger.info(r.url().toString())
-                    logger.info(r.headers().toString())
+            logger.info(buffer.readUtf8())
+            logger.info(request.url().toString())
+            logger.info(request.headers().toString())
 
-                    chain.proceed(r)
-                }
-                .build()
+            chain.proceed(request)
+        }.build()
 
         val retrofit = Retrofit.Builder()
                 .baseUrl("https://api.github.com")

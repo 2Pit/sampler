@@ -23,7 +23,7 @@ object Push {
     init {
         pipeline.intercept(findCard) {
             val event = context
-            val fullName = event.repository.full_name
+            val fullName = event.repository.fullName
             val card = CardManager.get(fullName)
             if (card == null) {
                 log.error { "Unknown card $fullName." }
@@ -37,13 +37,13 @@ object Push {
             }
 
             when (card.status) {
-                CardStatus.checkIn -> {
+                CardStatus.CHECK_IN -> {
                 }
-                CardStatus.added -> {
+                CardStatus.ADDING -> {
                 }
-                CardStatus.updated -> {
+                CardStatus.UPDATING -> {
                 }
-                CardStatus.stopped -> {
+                CardStatus.STOPPING -> {
                 }
             }
         }

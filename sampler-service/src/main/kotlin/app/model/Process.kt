@@ -2,65 +2,14 @@ package app.model
 
 import kotlinx.serialization.Serializable
 
-enum class ProcessStatus { open, inProgress, finished, error }
+enum class ProcessStatus { OPEN, IN_PROGRESS, FINISHED, ERROR }
 
 interface ProcessType
-enum class RegularPT : ProcessType { createPR, testRef }
-enum class SpecialPT : ProcessType { fork, moveTo, adding, stopping, updating }
-
-abstract class AbstractProcess(
-        open val type: ProcessType,
-        protected var _status: ProcessStatus = ProcessStatus.open,
-        protected var _errorDescription: String? = null
-) : ProcessRendering {
-    init {
-        commit()
-    }
-
-    override val status = _status
-    override val errorDescription = _errorDescription
-
-    //    TODO: sync on object
-    fun update(
-            status: ProcessStatus = this._status,
-            errorDescription: String? = this._errorDescription
-    ) {
-        _status = status
-        _errorDescription = errorDescription
-        commit()
-    }
-
-    private fun commit() = CardManager.commit()
-}
-
-@Serializable
-class RegularProcess(
-        override val type: RegularPT,
-        val owner: String,
-        val repo: String,
-        val ref: String,
-        status: ProcessStatus = ProcessStatus.open,
-        errorDescription: String? = null
-) : AbstractProcess(type, status, errorDescription) {
-    override fun renderLabel(): String = when (type) {
-        RegularPT.createPR -> "createPR $ref"
-        RegularPT.testRef -> {
-            val own = if (owner == "ksamples") "" else owner
-            "test $own/$ref"
-        }
-    }
-}
-
-@Serializable
-class SpecialProcess(
-        override val type: SpecialPT,
-        status: ProcessStatus = ProcessStatus.open,
-        errorDescription: String? = null
-) : AbstractProcess(type, status, errorDescription) {
-    override fun renderLabel(): String = type.name
-}
+enum class RegularPT : ProcessType { CREATE_PR, TEST_REF }
+enum class SpecialPT : ProcessType { FORK, MOVE_TO, ADDING, STOPPING, UPDATING }
 
 interface ProcessRendering {
+    val type: ProcessType
     val status: ProcessStatus
     val errorDescription: String?
 
@@ -68,10 +17,81 @@ interface ProcessRendering {
 
     fun render(): String {
         return when (status) {
-            ProcessStatus.open -> "- [ ] ${renderLabel()}"
-            ProcessStatus.inProgress -> "- [ ] ${renderLabel()}"
-            ProcessStatus.finished -> "- [x] ${renderLabel()}"
-            ProcessStatus.error -> "- [ ] ${renderLabel()}\nerror: $errorDescription"
+            ProcessStatus.OPEN -> "- [ ] ${renderLabel()}"
+            ProcessStatus.IN_PROGRESS -> "- [ ] ${renderLabel()}"
+            ProcessStatus.FINISHED -> "- [x] ${renderLabel()}"
+            ProcessStatus.ERROR -> "- [ ] ${renderLabel()}\nerror: $errorDescription"
         }
     }
+}
+
+interface RegularProcessI : ProcessRendering {
+    override val type: RegularPT
+    val owner: String
+    val repo: String
+    val ref: String
+
+    override fun renderLabel(): String = when (type) {
+        RegularPT.CREATE_PR -> "createPR $ref"
+        RegularPT.TEST_REF -> {
+            val own = if (owner == "ksamples") "" else owner
+            "test $own/$ref"
+        }
+    }
+
+    fun update(upd: RegularProcess.() -> Unit)
+}
+
+@Serializable
+class RegularProcess private constructor(
+        override val type: RegularPT,
+        override val owner: String,
+        override val repo: String,
+        override val ref: String,
+        override var status: ProcessStatus,
+        override var errorDescription: String?
+) : RegularProcessI {
+
+    companion object {
+        fun create(
+                type: RegularPT,
+                owner: String,
+                repo: String,
+                ref: String,
+                status: ProcessStatus = ProcessStatus.OPEN,
+                errorDescription: String? = null
+        ): RegularProcessI = RegularProcess(type, owner, repo, ref, status, errorDescription)
+    }
+
+    override fun update(upd: RegularProcess.() -> Unit) {
+        this.upd()
+        CardManager.commit()
+    }
+}
+
+interface SpecialProcessI : ProcessRendering {
+    fun update(upd: SpecialProcess.() -> Unit)
+}
+
+@Serializable
+class SpecialProcess private constructor(
+        override val type: SpecialPT,
+        override var status: ProcessStatus,
+        override var errorDescription: String?
+
+) : SpecialProcessI {
+    companion object {
+        fun create(
+                type: SpecialPT,
+                status: ProcessStatus = ProcessStatus.OPEN,
+                errorDescription: String? = null
+        ): SpecialProcessI = SpecialProcess(type, status, errorDescription)
+    }
+
+    override fun update(upd: SpecialProcess.() -> Unit) {
+        this.upd()
+        CardManager.commit()
+    }
+
+    override fun renderLabel(): String = type.name
 }

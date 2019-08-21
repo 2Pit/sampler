@@ -28,28 +28,18 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @KtorExperimentalAPI
 @UnstableDefault
-@Suppress("unused") // Referenced in application.conf
+@Suppress("unused")
 fun Application.module() {
     val json = Json(JsonConfiguration(strictMode = false))
-    Properties.githubToken = this.environment.config.property("ktor.security.github.token").getString()
-    Properties.init()
-
-    install(ContentNegotiation) {
-        jackson {
-            enable(SerializationFeature.INDENT_OUTPUT)
-            propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-        }
-    }
 
     routing {
         post("/add") {
             call.respond("OK")
 
             val text = call.receiveText()
-            val event = call.request.headers["x-github-event"]!!
 //            val timestamp = call.request.headers["timestamp"]!!
 //            val payload = call.request.headers["x-github-delivery"]!!
-            when (event) {
+            when (call.request.headers["x-github-event"]!!) {
                 "installation" -> {
                     val installationEvent = json.parse(InstallationEvent.serializer(), text)
                     when (installationEvent.action) {
@@ -60,7 +50,7 @@ fun Application.module() {
                 }
                 "push" -> {
                     val pushEvent = json.parse(PushEvent.serializer(), text)
-                    Push.pipeline
+                    Push.pipeline.execute(pushEvent, Unit)
                 }
                 else -> {
                 }

@@ -10,14 +10,11 @@ class JBProtocolSamplerCommand : JBProtocolCommand("sampler") {
         val navigate by lazy { findCommand("navigate")!! }
 
 //        TODO fix pattern in JbProtocolNavigateCommand
-        val pattern = Pattern.compile("(?<path>[^:]*)(:(?<line>[\\d]+))(:(?<column>[\\d]+))?")
+val correctPathWithLocation = Pattern.compile("(?<path>[^:]*)(:(?<line>[\\d]+))(:(?<column>[\\d]+))?")
     }
 
     override fun perform(sampleName: String, parameters: MutableMap<String, String>) {
-        ProjectManager.getInstance().openProjects.filter { project ->
-            ModuleManager.getInstance(project).modules.any { it.name == sampleName }
-        }.forEach {
-            navigate.perform("reference", parameters + ("project" to it.name))
-        }
+        // TODO discuss what should we do
+        TODO()
     }
 }

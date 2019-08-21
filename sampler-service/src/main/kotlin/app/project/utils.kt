@@ -11,8 +11,6 @@ object Consts {
     val addedColumnId = 6215567L
     val updatedColumnId = 6215568L
     val stoppedColumnId = 6215569L
-
-    val mainRepo = IRepositoryIdProvider { "ksamples/main" }
 }
 
 inline fun Logger.debug(producer: () -> String) {

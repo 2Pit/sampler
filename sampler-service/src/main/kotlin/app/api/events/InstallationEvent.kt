@@ -2,6 +2,7 @@ package app.api.events
 
 import app.api.GitRepository
 import app.api.GitUser
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,11 +18,11 @@ data class InstallationEvent(
     class Installation(
             val id: Int,
             val account: Account,
-            val app_id: Int,
-            val target_id: Int,
-            val target_type: TargetType,
-            val created_at: Long,
-            val updated_at: Long
+            @SerialName("app_id") val appId: Int,
+            @SerialName("target_id") val targetId: Int,
+            @SerialName("target_type") val targetType: TargetType
+//            val created_at: Long,
+//            val updated_at: Long
     ) {
         @Serializable
         data class Account(

@@ -4,6 +4,7 @@ import app.api.GitCommit
 import app.api.GitPusher
 import app.api.GitRepository
 import app.api.GitUser
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,7 +15,7 @@ data class PushEvent(
         val created: Boolean,
         val deleted: Boolean,
         val forced: Boolean,
-        val base_ref: String?,
+        @SerialName("base_ref") val baseRef: String?,
         val commits: List<GitCommit>,
         val headCommit: GitCommit?,
         val repository: GitRepository,

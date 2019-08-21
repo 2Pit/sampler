@@ -114,7 +114,7 @@ data class GitProject(
 data class GitRepository(
         val id: Int,
         val name: String,
-        val full_name: String,
+        @SerialName("full_name") val fullName: String,
         val owner: GitUser
 )
 
@@ -131,7 +131,7 @@ data class GitCard(
         val note: String,
         val creator: GitUser,
         val archived: Boolean,
-        val content_url: String
+        @SerialName("content_url") val contentUrl: String
 ) {
-    val issueNumber = content_url.substringAfterLast("/").toInt()
+    val issueNumber = contentUrl.substringAfterLast("/").toInt()
 }

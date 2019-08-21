@@ -8,9 +8,7 @@ class SamplerModuleType : ModuleType<SamplerModuleBuilder>("JAVA_MODULE") {
 
     override fun getName(): String = "Sampler"
 
-    override fun getDescription(): String = """
-        Cloning a tutorial from list.
-    """.trimIndent()
+    override fun getDescription(): String = "Cloning a tutorial from list."
 
     override fun getNodeIcon(isOpened: Boolean): Icon = Icons.KOTLIN_SMALL_LOGO
 }

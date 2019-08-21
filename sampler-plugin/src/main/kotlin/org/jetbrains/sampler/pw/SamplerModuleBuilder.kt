@@ -42,7 +42,7 @@ class SamplerModuleBuilder : ModuleBuilder() {
         val project = model.project
 
         ApplicationManager.getApplication().invokeLater({
-            object : Task.Modal(project, "Cloning sample", false) {
+            object : Task.Modal(project, "Cloning Sample...", false) {
                 override fun run(indicator: ProgressIndicator) {
                     val tmpDir = FileUtil.createTempDirectory("clone", info.name)
                     val res = Git.getInstance().clone(project, tmpDir.parentFile, info.url, tmpDir.name)

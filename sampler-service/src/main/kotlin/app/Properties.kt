@@ -1,18 +1,13 @@
 package app
 
+import com.typesafe.config.ConfigFactory
+import io.ktor.config.HoconApplicationConfig
+import org.eclipse.egit.github.core.IRepositoryIdProvider
 import org.eclipse.egit.github.core.client.GitHubClient
-import java.io.File
 
 object Properties {
-    private val projectDir = File("/home/peter.bogdanov/IdeaProjects/csc-practice/")
-
-    val storagePath = File(projectDir, "_tmp")
-    val samplerInfoFile = File(storagePath, "samplerInfo.json")
-    val infoFile = File(storagePath, "info.json")
-    lateinit var githubToken: String
-    lateinit var client: GitHubClient
-
-    fun init() {
-        client = GitHubClient().apply { setOAuth2Token(githubToken) }
-    }
+    private val config = HoconApplicationConfig(ConfigFactory.load())
+    val githubToken: String = config.property("ktor.security.github.token").getString()
+    val client: GitHubClient = GitHubClient().apply { setOAuth2Token(githubToken) }
+    val mainRepo = IRepositoryIdProvider { "ksamples/main" }
 }
