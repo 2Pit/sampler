@@ -1,73 +1,60 @@
 package app.model
 
-import com.test.Settings
+import app.project.Consts
+import app.services.Services
+import arrow.core.extensions.StringMonoid
+import arrow.data.extensions.list.foldable.fold
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.list
-import java.io.File
 
 
-/*Do not create this class directly. Use CardManager.*/
 @Serializable
 data class Card internal constructor(
         val id: Long,
         val issueNumber: Int,
         val fullName: String,
-        val processIds: List<Long>,
-        val status: CardStatus = CardStatus.checkIn,
-        val prIds: List<Long> = emptyList()
+        private var _status: CardStatus = CardStatus.checkIn,
+        private var _regularProcesses: List<RegularProcess> = emptyList(),
+        private var _specialProcesses: List<SpecialProcess> = emptyList(),
+        private var _forkedRefs: List<String> = emptyList(),
+        private var _prBranches: List<String> = emptyList()
 ) {
-    @Transient
-    val processes: List<Process>
-        get() = ProcessManager.get(processIds)
+    init {
+        CardManager.addCard(this)
+    }
 
-    @Transient
     val repo = fullName.substringAfter("/")
+    val status: CardStatus = _status
+    val regularProcesses = _regularProcesses
+    val specialProcesses = _specialProcesses
+    val forkedRefs: List<String> = _forkedRefs
+    val prBranches: List<String> = _prBranches
 
+    //    TODO sync on object
     fun update(
-            processes: List<Process> = this.processes,
-            status: CardStatus = this.status
-    ): Card {
-        return CardManager.create(id, issueNumber, fullName, processes, status)
+            status: CardStatus = this._status,
+            regularProcesses: List<RegularProcess> = this._regularProcesses,
+            specialProcesses: List<SpecialProcess> = this._specialProcesses,
+            forkedRefs: List<String> = this._forkedRefs,
+            prBranches: List<String> = this._prBranches
+    ) {
+        _status = status
+        _regularProcesses = regularProcesses
+        _specialProcesses = specialProcesses
+        _forkedRefs = forkedRefs
+        _prBranches = prBranches
+        commit()
+    }
+
+    private fun commit() = CardManager.commit()
+
+    fun updateUI() {
+        val issue = Services.issueService.getIssue(Consts.mainRepo, this.issueNumber)
+        // TODO set lables
+        issue.body = this.regularProcesses.map { it.render() }.fold(object : StringMonoid {
+            override fun String.combine(b: String): String = "$this\n$b"
+        })
+        Services.issueService.editIssue(Consts.mainRepo, issue)
     }
 }
 
 enum class CardStatus { checkIn, added, updated, stopped }
-
-object CardManager {
-    private val cards: MutableMap<String, Card> = mutableMapOf()
-    private val file = File(Settings.storageDir, "cards.json")
-    private val json = Json(JsonConfiguration.Stable)
-
-    init {
-        if (file.exists())
-            json.parse(Card.serializer().list, file.readText()).associateByTo(cards) { it.fullName }
-    }
-
-    fun commit() {
-        file.writeText(json.stringify(Card.serializer().list, cards.values.toList()))
-    }
-
-    fun create(
-            id: Long,
-            issueNumber: Int,
-            fullName: String,
-            processes: List<Process>,
-            status: CardStatus = CardStatus.checkIn
-    ): Card {
-        val res = Card(id, issueNumber, fullName, processes.map { it.id }, status)
-        cards[fullName] = res
-        commit()
-        return res
-    }
-
-    fun getAll(): List<Card> = cards.values.toList()
-
-    fun get(fullName: String): Card? = cards[fullName]
-
-    fun getBy(status: CardStatus): List<Card> {
-        return cards.values.filter { it.status == status }
-    }
-}

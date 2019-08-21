@@ -1,73 +1,77 @@
 package app.model
 
-import com.test.Settings
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.list
-import java.io.File
-
-/*Do not create this class directly. Use ProcessManager.*/
-@Serializable
-class Process internal constructor(
-        val id: Long,
-        val name: String,
-        val status: ProcessStatus = ProcessStatus.open,
-        val errorDescription: String? = null
-) {
-    fun update(
-            status: ProcessStatus = this.status,
-            errorDescription: String? = this.errorDescription
-    ): Process {
-        return ProcessManager.update(id, name, status, errorDescription)
-    }
-}
 
 enum class ProcessStatus { open, inProgress, finished, error }
 
+interface ProcessType
+enum class RegularPT : ProcessType { createPR, testRef }
+enum class SpecialPT : ProcessType { fork, moveTo, adding, stopping, updating }
 
-object ProcessManager {
-    private val processes: MutableMap<Long, Process> = mutableMapOf()
-    private val file = File(Settings.storageDir, "processes.json")
-    private val json = Json(JsonConfiguration.Stable)
-    private var counter: Long
-
+abstract class AbstractProcess(
+        open val type: ProcessType,
+        protected var _status: ProcessStatus = ProcessStatus.open,
+        protected var _errorDescription: String? = null
+) : ProcessRendering {
     init {
-        if (file.exists())
-            json.parse(Process.serializer().list, file.readText()).associateByTo(processes) { it.id }
-        counter = processes.values.map { it.id }.max() ?: 0
-    }
-
-    fun create(
-            name: String,
-            status: ProcessStatus = ProcessStatus.open,
-            errorDescription: String? = null
-    ): Process {
-        val res = Process(counter++, name, status, errorDescription)
-        processes[res.id] = res
         commit()
-        return res
     }
 
+    override val status = _status
+    override val errorDescription = _errorDescription
+
+    //    TODO: sync on object
     fun update(
-            id: Long,
-            name: String,
-            status: ProcessStatus = ProcessStatus.open,
-            errorDescription: String? = null
-    ): Process {
-        val res = Process(id, name, status, errorDescription)
-        processes[id] = res
+            status: ProcessStatus = this._status,
+            errorDescription: String? = this._errorDescription
+    ) {
+        _status = status
+        _errorDescription = errorDescription
         commit()
-        return res
     }
 
-    fun get(id: Long): Process? = processes[id]
+    private fun commit() = CardManager.commit()
+}
 
-    fun get(ids: List<Long>): List<Process> = ids.map { get(it)!! }
+@Serializable
+class RegularProcess(
+        override val type: RegularPT,
+        val owner: String,
+        val repo: String,
+        val ref: String,
+        status: ProcessStatus = ProcessStatus.open,
+        errorDescription: String? = null
+) : AbstractProcess(type, status, errorDescription) {
+    override fun renderLabel(): String = when (type) {
+        RegularPT.createPR -> "createPR $ref"
+        RegularPT.testRef -> {
+            val own = if (owner == "ksamples") "" else owner
+            "test $own/$ref"
+        }
+    }
+}
 
-    fun getAll(): List<Process> = processes.values.toList()
+@Serializable
+class SpecialProcess(
+        override val type: SpecialPT,
+        status: ProcessStatus = ProcessStatus.open,
+        errorDescription: String? = null
+) : AbstractProcess(type, status, errorDescription) {
+    override fun renderLabel(): String = type.name
+}
 
-    private fun commit() {
-        file.writeText(json.stringify(Process.serializer().list, processes.values.toList()))
+interface ProcessRendering {
+    val status: ProcessStatus
+    val errorDescription: String?
+
+    fun renderLabel(): String
+
+    fun render(): String {
+        return when (status) {
+            ProcessStatus.open -> "- [ ] ${renderLabel()}"
+            ProcessStatus.inProgress -> "- [ ] ${renderLabel()}"
+            ProcessStatus.finished -> "- [x] ${renderLabel()}"
+            ProcessStatus.error -> "- [ ] ${renderLabel()}\nerror: $errorDescription"
+        }
     }
 }

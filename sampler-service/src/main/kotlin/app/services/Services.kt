@@ -3,10 +3,7 @@ package app.services
 import app.Properties
 import okhttp3.OkHttpClient
 import okio.Buffer
-import org.eclipse.egit.github.core.service.CommitService
-import org.eclipse.egit.github.core.service.ContentsService
-import org.eclipse.egit.github.core.service.IssueService
-import org.eclipse.egit.github.core.service.RepositoryService
+import org.eclipse.egit.github.core.service.*
 import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,6 +13,8 @@ object Services {
     val repositoryService = RepositoryService(Properties.client)
     val commitService = CommitService(Properties.client)
     val contentService = ContentsService(Properties.client)
+    val dataService = DataService(Properties.client)
+    val pullRequestService = PullRequestService(Properties.client)
     val projectService = initProjectService()
 
     private fun initProjectService(): ProjectService {

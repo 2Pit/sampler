@@ -1,29 +1,7 @@
 package app.project
 
-import app.model.Card
-import app.services.Services
-import kotlinx.coroutines.runBlocking
 import org.eclipse.egit.github.core.IRepositoryIdProvider
 import org.slf4j.Logger
-import java.util.regex.Pattern
-import app.model.Process
-import app.model.ProcessStatus
-
-fun renderBodyText(processes: List<Process>): String {
-    return StringBuilder().apply {
-        processes.forEach { process ->
-            appendln(
-                    when (process.status) {
-                        ProcessStatus.open -> "- [ ] ${process.name}"
-                        ProcessStatus.inProgress -> "- [ ] ${process.name}"
-                        ProcessStatus.finished -> "- [x] ${process.name}"
-                        ProcessStatus.error -> "- [ ] ${process.name} [error]"
-                    }
-            )
-        }
-    }.toString()
-}
-
 
 object Consts {
     //    TODO get ids from github code
