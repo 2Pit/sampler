@@ -114,8 +114,8 @@ data class GitProject(
 data class GitRepository(
         val id: Int,
         val name: String,
-        @SerialName("full_name") val fullName: String,
-        val owner: GitUser
+        @SerialName("full_name") val fullName: String
+//        val owner: GitUser
 )
 
 
@@ -134,4 +134,26 @@ data class GitCard(
         @SerialName("content_url") val contentUrl: String
 ) {
     val issueNumber = contentUrl.substringAfterLast("/").toInt()
+}
+
+@Serializable
+class GitPullRequest(
+        val base: Base,
+        val body: String,
+        val head: Base,
+        val number: Int,
+        val state: State,
+        val title: String,
+        val user: GitUser
+) {
+
+    @Serializable
+    class Base(
+            val label: String,
+            val ref: String,
+            val repo: GitRepository
+//          val user
+    )
+
+    enum class State { open, close }
 }

@@ -24,7 +24,7 @@ interface CardI {
     fun updateUI() {
         val issue = Services.issueService.getIssue(Properties.mainRepo, this.issueNumber)
         // TODO set lables
-        issue.body = this.regularProcesses.joinToString("\n") { it.render() }
+        issue.body = (specialProcesses + regularProcesses).joinToString("\n") { it.render() }
         Services.issueService.editIssue(Properties.mainRepo, issue)
     }
 }

@@ -3,7 +3,7 @@ package app.project
 import app.api.events.PushEvent
 import app.model.Card
 import app.model.CardManager
-import app.model.CardStatus
+import app.services.PullRequestService
 import app.services.Services
 import io.ktor.util.pipeline.Pipeline
 import io.ktor.util.pipeline.PipelinePhase
@@ -32,31 +32,21 @@ object Push {
 
             val ref = event.ref
             if (card.prBranches.contains(ref)) {
-//                Ignore. PR already exist
-                return@intercept
+                return@intercept // Ignore. PR already exist
             }
 
-            when (card.status) {
-                CardStatus.CHECK_IN -> {
-                }
-                CardStatus.ADDING -> {
-                }
-                CardStatus.UPDATING -> {
-                }
-                CardStatus.STOPPING -> {
-                }
-            }
+            createPrPipeline.execute(event to card, Unit)
         }
 
         createPrPipeline.intercept(first) {
-            //            val (event, card) = context
-//            val ref = event.ref
-//            val pr = PullRequest().apply {
-//                title = ""
-//                head = PullRequestMarker().apply { }
-//                base = ""
-//            }
-//            pullRequestService.createPullRequest()
+            val (event, card) = context
+            val ref = event.ref
+            val body = PullRequestService.CreateRequest(
+                    "PR title",
+                    head = ref,
+                    base = ""
+            )
+            pullRequestService.create(card.owner, card.repo, body)
         }
     }
 }

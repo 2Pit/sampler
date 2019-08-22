@@ -14,10 +14,10 @@ object Services {
     val commitService = CommitService(Properties.client)
     val contentService = ContentsService(Properties.client)
     val dataService = DataService(Properties.client)
-    val pullRequestService = PullRequestService(Properties.client)
-    val projectService = initProjectService()
+    val projectService = initRetrofitService(ProjectService::class.java)
+    val pullRequestService = initRetrofitService(PullRequestService::class.java)
 
-    private fun initProjectService(): ProjectService {
+    private fun <T> initRetrofitService(clazz: Class<T>): T {
         val httpClient = OkHttpClient.Builder().addInterceptor { chain ->
             val request = chain.request().newBuilder()
                     .addHeader("Accept", "application/vnd.github.inertia-preview+json")
@@ -25,7 +25,7 @@ object Services {
                     .build()
             chain.proceed(request)
         }.addInterceptor { chain ->
-            val logger = LoggerFactory.getLogger(ProjectService::class.java)
+            val logger = LoggerFactory.getLogger(clazz)
             val request = chain.request()
             val buffer = Buffer()
             request.body()?.writeTo(buffer)
@@ -43,6 +43,6 @@ object Services {
                 .client(httpClient)
                 .build()
 
-        return retrofit.create(ProjectService::class.java)
+        return retrofit.create(clazz)
     }
 }
