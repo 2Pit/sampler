@@ -16,8 +16,8 @@ import java.io.IOException
 object Installation {
     private val log = LoggerFactory.getLogger(Installation::class.java)
     //    TODO get id from github code
-    const val CHECK_IN_COLUMN_ID = 6215563L
-    const val ORGANIZATION = "ksamples"
+    private const val CHECK_IN_COLUMN_ID = 6215563L
+    private const val ORGANIZATION = "ksamples"
 
     private val split = PipelinePhase("split")
     val splitRepos = Pipeline<Unit, InstallationEvent>(split)
@@ -118,7 +118,7 @@ object Installation {
         testPipeline.intercept(testRef) {
             val (card, process) = context
             log.debug { process.renderLabel() }
-//            Do smth
+            // TODO test implementation
             process.update { status = ProcessStatus.FINISHED }
             card.updateUI()
         }

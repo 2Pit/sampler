@@ -18,12 +18,12 @@ interface CardI {
 
     val fullName: String
 
-    //    TODO sync on object
+    // TODO sync on object
     fun update(upd: Card.() -> Unit)
 
     fun updateUI() {
         val issue = Services.issueService.getIssue(Properties.mainRepo, this.issueNumber)
-        // TODO set lables
+        // TODO set labels
         issue.body = (specialProcesses + regularProcesses).joinToString("\n") { it.render() }
         Services.issueService.editIssue(Properties.mainRepo, issue)
     }

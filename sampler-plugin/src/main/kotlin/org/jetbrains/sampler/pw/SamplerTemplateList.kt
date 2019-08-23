@@ -54,7 +54,7 @@ class SamplerTemplateList(items: List<SampleDescription>) {
             add(scrollPane1, GridConstraints(1, 1, 2, 2, ANCHOR_CENTER, FILL_BOTH, SIZEPOLICY_CAN_SHRINK or SIZEPOLICY_CAN_GROW, SIZEPOLICY_CAN_SHRINK or SIZEPOLICY_CAN_GROW, null, null, null, 0, false))
         }
         descriptionPane.apply {
-            //            contentType = "text/html"
+            contentType = "text/html"
             minimumSize = Dimension(200, 200)
             preferredSize = Dimension(200, 250)
             isRequestFocusEnabled = true

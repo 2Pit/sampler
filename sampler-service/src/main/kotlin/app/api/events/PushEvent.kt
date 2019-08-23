@@ -7,6 +7,7 @@ import app.api.GitUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// https://developer.github.com/v3/activity/events/types/#pushevent
 @Serializable
 data class PushEvent(
         val ref: String,

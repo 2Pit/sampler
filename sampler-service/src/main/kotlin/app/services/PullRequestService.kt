@@ -18,6 +18,5 @@ interface PullRequestService {
             head: String,
             base: String,
             body: String? = null
-//            maintainer_can_modify: Boolean = false,
     )
 }

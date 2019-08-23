@@ -29,12 +29,6 @@ interface ProjectService {
     @POST("/projects/columns/{column_id}/cards")
     suspend fun createCard(@Path("column_id") columnId: Long): GitCard
 
-//    suspend fun createCard(
-//            columnId: Long,
-//            contentId: Long,
-//            contentType: String
-//    ): GCard = createCard(columnId, CreateRequest(contentId, contentType))
-
     @POST("/projects/columns/{column_id}/cards")
     suspend fun createCard(
             @Path("column_id") columnId: Long,

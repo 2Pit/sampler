@@ -28,30 +28,19 @@ repositories {
 dependencies {
     compile project(':sampler-common')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
-
-    compile("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
     compile("org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version")
-    compile("io.ktor:ktor-server-netty:$ktor_version")
-    compile("ch.qos.logback:logback-classic:$logback_version")
-    compile("io.ktor:ktor-server-core:$ktor_version")
-    compile("io.ktor:ktor-auth:$ktor_version")
-    compile("io.ktor:ktor-auth-jwt:$ktor_version")
-    compile("io.ktor:ktor-jackson:$ktor_version")
-    compile("io.ktor:ktor-client-apache:$ktor_version")
-    compile("org.jetbrains.exposed:exposed:$exposed_version")
 
-    compile("io.arrow-kt:arrow-core-data:$arrow_version")
-    compile("io.arrow-kt:arrow-core-extensions:$arrow_version")
-    compile("io.arrow-kt:arrow-syntax:$arrow_version")
-    compile("io.arrow-kt:arrow-typeclasses:$arrow_version")
-    compile("io.arrow-kt:arrow-extras-data:$arrow_version")
-    compile("io.arrow-kt:arrow-extras-extensions:$arrow_version")
-//    kapt("io.arrow-kt:arrow-meta:$arrow_version")
+    implementation("com.squareup.retrofit2:retrofit:2.6.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+
+    compile("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
+    compile("ch.qos.logback:logback-classic:$logback_version")
+
+    compile("io.ktor:ktor-server-netty:$ktor_version")
+    compile("io.ktor:ktor-server-core:$ktor_version")
+    compile("io.ktor:ktor-client-apache:$ktor_version")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_version")
 

@@ -5,6 +5,7 @@ import app.api.GitUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// https://developer.github.com/v3/activity/events/types/#installationevent
 @Serializable
 data class InstallationEvent(
         val action: Action,
@@ -21,8 +22,6 @@ data class InstallationEvent(
             @SerialName("app_id") val appId: Int,
             @SerialName("target_id") val targetId: Int,
             @SerialName("target_type") val targetType: TargetType
-//            val created_at: Long,
-//            val updated_at: Long
     ) {
         @Serializable
         data class Account(

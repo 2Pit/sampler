@@ -1,6 +1,5 @@
 package app.project
 
-import org.eclipse.egit.github.core.IRepositoryIdProvider
 import org.slf4j.Logger
 
 object Consts {
