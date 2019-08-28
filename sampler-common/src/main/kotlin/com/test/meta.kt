@@ -13,4 +13,3 @@ data class SampleDescription(
         return name
     }
 }
-

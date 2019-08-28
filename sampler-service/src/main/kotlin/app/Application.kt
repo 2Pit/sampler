@@ -29,7 +29,7 @@ fun Application.module() {
             call.respond("OK")
 
             val text = call.receiveText()
-            when (call.request.headers["x-github-event"]!!) {
+            when (val event = call.request.headers["x-github-event"]!!) {
                 "installation" -> {
                     val installationEvent = json.parse(InstallationEvent.serializer(), text)
                     when (installationEvent.action) {
@@ -42,8 +42,7 @@ fun Application.module() {
                     val pushEvent = json.parse(PushEvent.serializer(), text)
                     Push.pipeline.execute(pushEvent, Unit)
                 }
-                else -> {
-                }
+                else -> TODO("Unsupported event: $event")
             }
         }
     }

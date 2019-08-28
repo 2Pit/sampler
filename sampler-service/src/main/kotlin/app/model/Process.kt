@@ -78,7 +78,6 @@ class SpecialProcess private constructor(
         override val type: SpecialPT,
         override var status: ProcessStatus,
         override var errorDescription: String?
-
 ) : SpecialProcessI {
     companion object {
         fun create(

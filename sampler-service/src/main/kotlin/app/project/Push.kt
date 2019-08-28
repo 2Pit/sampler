@@ -10,15 +10,14 @@ import io.ktor.util.pipeline.PipelinePhase
 import org.slf4j.LoggerFactory
 
 object Push {
-    val log = LoggerFactory.getLogger(Push::class.java)
+    private val log = LoggerFactory.getLogger(Push::class.java)
     private val findCard = PipelinePhase("findCard")
     val pipeline = Pipeline<Unit, PushEvent>(findCard)
-    val projectService = Services.projectService
 
     private val first = PipelinePhase("first")
-    val createPrPipeline = Pipeline<Unit, Pair<PushEvent, Card>>(first)
+    private val createPrPipeline = Pipeline<Unit, Pair<PushEvent, Card>>(first)
 
-    val pullRequestService = Services.pullRequestService
+    private val pullRequestService = Services.pullRequestService
 
     init {
         pipeline.intercept(findCard) {
