@@ -1,3 +1,16 @@
+**Run Plugin**
+1. Fix root project dir in **Settings.kt**
+1. $ `./gradlew :sampler-plugin:runIde`
+
+**Run Sampler Service**  
+Probably you haven't access to [KSamples App](https://github.com/settings/apps/kotlin-sample).
+So you can create your own app. 
+For receiving notifications from GitHub you can use [smee.io](https://smee.io/).
+
+1. Follow steps 1 and 2 from [here](https://developer.github.com/apps/quickstart-guides/setting-up-your-development-environment).
+1. Set up security.github.token at `resources/application.conf` 
+1. $ `./gradlew :sampler-service:run`
+
 **More about the service**  
 Libraries: KTor, Kotlinx-serialization
 The service gets notification from GitHub App and runs a special pipeline.  
@@ -21,6 +34,5 @@ Pipeline 2.
 Pipeline 3.
 
 1. Test branch
-
 
 For event **push** we should create new pull request (if it doesn’t exist before) and test it. But this part is unimplemented.

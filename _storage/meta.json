@@ -1,0 +1,21 @@
+[
+  {
+    "name": "intro-coroutines",
+    "url": "https://github.com/kotlin-hands-on/intro-coroutines.git",
+    "readme": "<h1>Introduction to Coroutines and Channels Hands-On Lab</h1>\n<p>This repository is the code corresponding to the\n<a href=\"https://play.kotlinlang.org/hands-on/Introduction%20to%20Coroutines%20and%20Channels/01_Introduction\" rel=\"nofollow\">Introduction to Coroutines and Channels</a>\nHands-On Lab.</p>",
+    "tags": [
+      "kotlin",
+      "gradle",
+      "coroutines"
+    ]
+  },
+  {
+    "name": "test sample",
+    "url": "https://github.com/2Pit/test",
+    "readme": "Some readmt.md\nHere must be sample description.",
+    "tags": [
+      "kotlin",
+      "gradle"
+    ]
+  }
+]

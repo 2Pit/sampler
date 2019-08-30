@@ -1,6 +1,6 @@
 package app.model
 
-import com.test.Settings
+import com.sampler.Settings
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration

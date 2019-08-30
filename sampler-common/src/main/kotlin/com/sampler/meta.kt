@@ -1,4 +1,4 @@
-package com.test
+package com.sampler
 
 import kotlinx.serialization.*
 

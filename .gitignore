@@ -1,4 +1,3 @@
-_storage
 sampler-service/src/main/resources/application.conf
 sampler-service/src/main/kotlin/app/test/
 sampler-service/requests.http

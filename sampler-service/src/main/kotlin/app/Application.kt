@@ -16,7 +16,10 @@ import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+object Application {
+    @JvmStatic
+    fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+}
 
 @KtorExperimentalAPI
 @UnstableDefault

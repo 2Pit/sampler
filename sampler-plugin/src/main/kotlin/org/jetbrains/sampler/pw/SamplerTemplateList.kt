@@ -8,7 +8,7 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridConstraints.*
 import com.intellij.uiDesigner.core.GridLayoutManager
-import com.test.SampleDescription
+import com.sampler.SampleDescription
 import java.awt.Dimension
 import java.awt.Insets
 import javax.swing.JPanel
