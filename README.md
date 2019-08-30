@@ -3,11 +3,12 @@
 1. $ `./gradlew :sampler-plugin:runIde`
 
 **Run Sampler Service**  
-Probably you haven't access to [KSamples App](https://github.com/settings/apps/kotlin-sample).
+Probably you don't have access to [KSamples App](https://github.com/settings/apps/kotlin-sample).
 So you can create your own app. 
 For receiving notifications from GitHub you can use [smee.io](https://smee.io/).
 
 1. Follow steps 1 and 2 from [here](https://developer.github.com/apps/quickstart-guides/setting-up-your-development-environment).
+For smee client use $ `smee --url <your webhook URL> --path /add --port 8090`
 1. Set up security.github.token at `resources/application.conf` 
 1. $ `./gradlew :sampler-service:run`
 
